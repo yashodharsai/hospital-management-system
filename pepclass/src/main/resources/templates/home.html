@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PEPCLASS Hospital</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div class="app-shell">
+    <header class="topbar">
+        <div class="brand">PEPCLASS Hospital</div>
+        <nav class="nav-actions">
+            <a th:href="@{/}">Home</a>
+            <a th:href="@{/login}">Login</a>
+            <a th:href="@{/register}">Sign Up</a>
+        </nav>
+    </header>
+
+    <section class="page-hero">
+        <div class="page-title">
+            <span class="portal-badge">Modern hospital experience</span>
+            <h1>Trusted care, powered by secure digital workflows.</h1>
+            <p>PEPCLASS brings together compassionate care, efficient records management, secure access, and a seamless patient journey across the hospital.</p>
+        </div>
+    </section>
+
+    <main class="main">
+        <section class="stats-grid">
+            <div class="stat">
+                <span>Services</span>
+                <strong>24/7</strong>
+            </div>
+            <div class="stat">
+                <span>Facilities</span>
+                <strong>18</strong>
+            </div>
+            <div class="stat">
+                <span>Mission</span>
+                <strong>Care First</strong>
+            </div>
+        </section>
+
+        <section class="portal-grid">
+            <article class="portal-card chairman">
+                <span>Our mission</span>
+                <h2>Deliver confident, connected care</h2>
+                <p>From admissions to treatment planning and follow-up reporting, every touchpoint is designed to keep care teams informed and patients supported.</p>
+            </article>
+            <article class="portal-card doctor">
+                <span>Core services</span>
+                <h2>Clinical, pharmacy, and reporting</h2>
+                <p>Doctors can manage patients, medicines, prescriptions, and medical reports with a unified, role-aware workspace.</p>
+            </article>
+            <article class="portal-card patient">
+                <span>Patient-first experience</span>
+                <h2>Simple access to your records</h2>
+                <p>Patients can sign up, log in, and track reports and prescriptions securely from one intuitive portal.</p>
+            </article>
+        </section>
+
+        <section class="content-card" style="margin-top:16px;">
+            <h2>Announcements</h2>
+            <p>New patient onboarding is now available through the secure Sign Up flow, while doctor and chairman access remains controlled through the administrator-managed login path.</p>
+            <div class="card-actions">
+                <a class="button" th:href="@{/login}">Open Login</a>
+                <a class="button secondary" th:href="@{/register}">Create Patient Account</a>
+            </div>
+        </section>
+    </main>
+</div>
+</body>
+</html>

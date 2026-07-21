@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patients</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div class="app-shell">
+    <header class="topbar">
+        <div class="brand">Hospital Management System</div>
+        <nav class="nav-actions">
+            <a th:href="@{/dashboard}">Dashboard</a>
+            <a th:href="@{/medicines}">Medicines</a>
+            <a th:href="@{/reports}">Reports</a>
+            <a th:href="@{/prescriptions}">Prescriptions</a>
+            <form class="logout-form" th:action="@{/logout}" method="post">
+                <button type="submit">Logout</button>
+            </form>
+        </nav>
+    </header>
+    <section class="page-hero">
+        <div class="page-title">
+            <span class="portal-badge">Patient Records</span>
+            <h1>Patients</h1>
+            <p>Review contact details and medical history for registered patients.</p>
+        </div>
+    </section>
+    <main class="main">
+        <div class="card-actions">
+            <a class="button" th:href="@{/patients/new}">Add Patient</a>
+        </div>
+        <section class="table-card">
+            <table th:if="${!patients.isEmpty()}">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Contact</th>
+                    <th>Email</th>
+                    <th>Age</th>
+                    <th>Patient Login</th>
+                    <th>Medical History</th>
+                    <th>Assigned Medicines</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="patient : ${patients}">
+                    <td th:text="${patient.fullName}">Patient Name</td>
+                    <td th:text="${patient.contact}">Contact</td>
+                    <td th:text="${patient.email}">Email</td>
+                    <td th:text="${patient.age}">Age</td>
+                    <td><span class="pill" th:text="${patient.patientUsername ?: 'Not linked'}">patient</span></td>
+                    <td th:text="${patient.medicalHistory}">History</td>
+                    <td>
+                        <div class="pill-stack" th:if="${!#lists.isEmpty(medicines)}">
+                            <span class="pill" th:each="medicine : ${medicines}" th:if="${medicine.patient != null and medicine.patient.id == patient.id}" th:text="${medicine.name}">Medicine</span>
+                        </div>
+                        <span class="muted-inline" th:if="${#lists.isEmpty(medicines)}">No medicines</span>
+                    </td>
+                    <td>
+                        <div class="card-actions compact-actions">
+                            <a class="button secondary" th:href="@{/patients/{id}/edit(id=${patient.id})}">Edit</a>
+                            <a class="button" th:href="@{/medicines/new(patientId=${patient.id})}">Add Medicine</a>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="empty-state" th:if="${patients.isEmpty()}">No patient records yet.</div>
+        </section>
+    </main>
+</div>
+</body>
+</html>

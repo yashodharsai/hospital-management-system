@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Form</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div class="app-shell">
+    <header class="topbar">
+        <div class="brand">Hospital Management System</div>
+        <nav class="nav-actions">
+            <a th:href="@{/dashboard}">Dashboard</a>
+            <a th:href="@{/reports}">Reports</a>
+            <form class="logout-form" th:action="@{/logout}" method="post">
+                <button type="submit">Logout</button>
+            </form>
+        </nav>
+    </header>
+    <section class="page-hero">
+        <div class="page-title">
+            <span class="portal-badge">Clinical Reports</span>
+            <h1>Report Details</h1>
+            <p>Create a downloadable report record for a patient.</p>
+        </div>
+    </section>
+    <main class="main">
+        <section class="content-card">
+            <form class="form-grid" th:action="@{/reports}" th:object="${report}" method="post">
+                <input type="hidden" th:field="*{id}">
+                <input type="hidden" th:field="*{uploadedBy}">
+                <input type="hidden" th:field="*{createdAt}">
+                <div class="field">
+                    <label for="patient">Patient</label>
+                    <select id="patient" th:field="*{patient}" required>
+                        <option value="">Select patient</option>
+                        <option th:each="patient : ${patients}" th:value="${patient.id}" th:text="${patient.fullName}">Patient</option>
+                    </select>
+                </div>
+                <div class="two-column">
+                    <div class="field">
+                        <label for="title">Title</label>
+                        <input id="title" th:field="*{title}" required>
+                    </div>
+                    <div class="field">
+                        <label for="fileName">File Name</label>
+                        <input id="fileName" th:field="*{fileName}">
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="notes">Notes</label>
+                    <textarea id="notes" th:field="*{notes}"></textarea>
+                </div>
+                <div class="field">
+                    <label for="reportContent">Report Content</label>
+                    <textarea id="reportContent" th:field="*{reportContent}"></textarea>
+                </div>
+                <div class="card-actions">
+                    <button type="submit">Save Report</button>
+                    <a class="button secondary" th:href="@{/reports}">Cancel</a>
+                </div>
+            </form>
+        </section>
+    </main>
+</div>
+</body>
+</html>

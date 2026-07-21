@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medicine Form</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div class="app-shell">
+    <header class="topbar">
+        <div class="brand">Hospital Management System</div>
+        <nav class="nav-actions">
+            <a th:href="@{/dashboard}">Dashboard</a>
+            <a th:href="@{/medicines}">Medicines</a>
+            <form class="logout-form" th:action="@{/logout}" method="post">
+                <button type="submit">Logout</button>
+            </form>
+        </nav>
+    </header>
+    <section class="page-hero">
+        <div class="page-title">
+            <span class="portal-badge">Medicine Inventory</span>
+            <h1>Medicine Details</h1>
+            <p>Add a medicine name and dosage instruction for quick staff reference.</p>
+        </div>
+    </section>
+    <main class="main">
+        <section class="content-card">
+            <form class="form-grid" th:action="@{/medicines}" th:object="${medicine}" method="post">
+                <input type="hidden" th:field="*{id}">
+                <div class="field">
+                    <label for="patient">Available Patient</label>
+                    <select id="patient" th:field="*{patient}" required>
+                        <option value="">Select patient</option>
+                        <option th:each="patient : ${patients}" th:value="${patient.id}" th:text="${patient.fullName}">Patient</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="name">Medicine Name</label>
+                    <input id="name" th:field="*{name}" required>
+                </div>
+                <div class="field">
+                    <label for="dosage">Dosage</label>
+                    <input id="dosage" th:field="*{dosage}" required>
+                </div>
+                <div class="field">
+                    <label>Timing</label>
+                    <div class="schedule-grid">
+                        <label class="toggle-box">
+                            <input type="checkbox" th:field="*{morning}" value="1">
+                            <span>Morning</span>
+                        </label>
+                        <label class="toggle-box">
+                            <input type="checkbox" th:field="*{afternoon}" value="1">
+                            <span>Afternoon</span>
+                        </label>
+                        <label class="toggle-box">
+                            <input type="checkbox" th:field="*{evening}" value="1">
+                            <span>Evening</span>
+                        </label>
+                        <label class="toggle-box">
+                            <input type="checkbox" th:field="*{night}" value="1">
+                            <span>Night</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="foodTiming">Food Timing</label>
+                    <select id="foodTiming" th:field="*{foodTiming}">
+                        <option value="">Select timing</option>
+                        <option value="Before Food">Before Food</option>
+                        <option value="After Food">After Food</option>
+                    </select>
+                </div>
+                <div class="card-actions">
+                    <button type="submit">Save Medicine</button>
+                    <a class="button secondary" th:href="@{/medicines}">Cancel</a>
+                </div>
+            </form>
+        </section>
+    </main>
+</div>
+</body>
+</html>

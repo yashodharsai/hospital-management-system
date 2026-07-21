@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Member</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body class="auth-page">
+<div class="auth-shell">
+    <section class="auth-panel">
+        <p class="eyebrow">Member onboarding</p>
+        <h1>Create your patient portal account</h1>
+        <p>Patients can create their own accounts securely. Doctors and the chairman use the dedicated login workflow managed by the administrator.</p>
+    </section>
+    <section class="auth-card">
+        <p class="eyebrow">Sign Up</p>
+        <h2>Patient account details</h2>
+        <form class="form-grid" th:action="@{/register}" th:object="${user}" method="post">
+            <div class="errors" th:if="${#fields.hasErrors('*')}">
+                <div th:each="error : ${#fields.errors('*')}" th:text="${error}">Please check the form.</div>
+            </div>
+            <div class="field">
+                <label for="username">Username</label>
+                <input id="username" th:field="*{username}" required>
+            </div>
+            <div class="field">
+                <label for="password">Password</label>
+                <input id="password" type="password" th:field="*{password}" required>
+            </div>
+            <div class="field">
+                <label for="fullName">Full Name</label>
+                <input id="fullName" th:field="*{fullName}" required>
+            </div>
+            <div class="field">
+                <label for="email">Email</label>
+                <input id="email" type="email" th:field="*{email}" required>
+            </div>
+            <div class="field">
+                <label for="phone">Phone</label>
+                <input id="phone" th:field="*{phone}" required>
+            </div>
+            <button type="submit">Create Patient Account</button>
+        </form>
+        <p>Already registered? <a th:href="@{/login}">Sign in</a></p>
+    </section>
+</div>
+</body>
+</html>

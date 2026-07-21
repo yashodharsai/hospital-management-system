@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Form</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div class="app-shell">
+    <header class="topbar">
+        <div class="brand">Hospital Management System</div>
+        <nav class="nav-actions">
+            <a th:href="@{/dashboard}">Dashboard</a>
+            <a th:href="@{/patients}">Patients</a>
+            <form class="logout-form" th:action="@{/logout}" method="post">
+                <button type="submit">Logout</button>
+            </form>
+        </nav>
+    </header>
+    <section class="page-hero">
+        <div class="page-title">
+            <span class="portal-badge">Patient Records</span>
+            <h1>Patient Details</h1>
+            <p>Add or update a patient's core contact information and medical notes.</p>
+        </div>
+    </section>
+    <main class="main">
+        <section class="content-card">
+            <form class="form-grid" th:action="@{/patients}" th:object="${patient}" method="post">
+                <input type="hidden" th:field="*{id}">
+                <div class="field">
+                    <label for="fullName">Full Name</label>
+                    <input id="fullName" th:field="*{fullName}" required>
+                </div>
+                <div class="two-column">
+                    <div class="field">
+                        <label for="contact">Contact</label>
+                        <input id="contact" th:field="*{contact}" required>
+                    </div>
+                    <div class="field">
+                        <label for="email">Email</label>
+                        <input id="email" type="email" th:field="*{email}">
+                    </div>
+                    <div class="field">
+                        <label for="age">Age</label>
+                        <input id="age" type="number" min="0" th:field="*{age}">
+                    </div>
+                    <div class="field">
+                        <label for="gender">Gender</label>
+                        <input id="gender" th:field="*{gender}">
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="patientUsername">Linked Patient Username</label>
+                    <input id="patientUsername" th:field="*{patientUsername}">
+                </div>
+                <div class="field">
+                    <label for="address">Address</label>
+                    <textarea id="address" th:field="*{address}"></textarea>
+                </div>
+                <div class="field">
+                    <label for="medicalHistory">Medical History</label>
+                    <textarea id="medicalHistory" th:field="*{medicalHistory}"></textarea>
+                </div>
+                <div class="card-actions">
+                    <button type="submit">Save Patient</button>
+                    <a class="button secondary" th:href="@{/patients}">Cancel</a>
+                </div>
+            </form>
+        </section>
+    </main>
+</div>
+</body>
+</html>

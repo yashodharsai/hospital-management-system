@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prescriptions</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div class="app-shell">
+    <header class="topbar">
+        <div class="brand">Hospital Management System</div>
+        <nav class="nav-actions">
+            <a th:href="@{/dashboard}">Dashboard</a>
+            <a th:href="@{/patients}">Patients</a>
+            <a th:href="@{/medicines}">Medicines</a>
+            <a th:href="@{/reports}">Reports</a>
+            <form class="logout-form" th:action="@{/logout}" method="post">
+                <button type="submit">Logout</button>
+            </form>
+        </nav>
+    </header>
+    <section class="page-hero">
+        <div class="page-title">
+            <span class="portal-badge">Prescriptions</span>
+            <h1>Prescriptions</h1>
+            <p>Prescribe medicines and dosage details for patient treatment.</p>
+        </div>
+    </section>
+    <main class="main">
+        <div class="card-actions">
+            <a class="button" th:href="@{/prescriptions/new}">Add Prescription</a>
+        </div>
+        <section class="table-card">
+            <table th:if="${!prescriptions.isEmpty()}">
+                <thead>
+                <tr>
+                    <th>Patient</th>
+                    <th>Medicine</th>
+                    <th>Dosage</th>
+                    <th>Prescribed By</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="prescription : ${prescriptions}">
+                    <td th:text="${prescription.patient.fullName}">Patient</td>
+                    <td th:text="${prescription.medicineName}">Medicine</td>
+                    <td th:text="${prescription.dosage}">Dosage</td>
+                    <td th:text="${prescription.prescribedBy}">Doctor</td>
+                    <td><a class="button danger" th:href="@{/prescriptions/{id}/delete(id=${prescription.id})}">Delete</a></td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="empty-state" th:if="${prescriptions.isEmpty()}">No prescriptions have been added yet.</div>
+        </section>
+    </main>
+</div>
+</body>
+</html>

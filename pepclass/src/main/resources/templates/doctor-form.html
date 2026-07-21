@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Doctor</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div class="app-shell">
+    <header class="topbar">
+        <div class="brand">Hospital Management System</div>
+        <nav class="nav-actions">
+            <a th:href="@{/dashboard}">Dashboard</a>
+            <a th:href="@{/doctors}">Doctors</a>
+            <form class="logout-form" th:action="@{/logout}" method="post">
+                <button type="submit">Logout</button>
+            </form>
+        </nav>
+    </header>
+    <section class="page-hero">
+        <div class="page-title">
+            <span class="portal-badge">Chairman Portal</span>
+            <h1>Add Doctor</h1>
+            <p>Create a secure doctor login managed by the chairman.</p>
+        </div>
+    </section>
+    <main class="main">
+        <section class="content-card">
+            <form class="form-grid" th:action="@{/doctors}" th:object="${doctor}" method="post">
+                <div class="errors" th:if="${#fields.hasErrors('*')}">
+                    <div th:each="error : ${#fields.errors('*')}" th:text="${error}">Please check the form.</div>
+                </div>
+                <div class="two-column">
+                    <div class="field">
+                        <label for="username">Username</label>
+                        <input id="username" th:field="*{username}" required>
+                    </div>
+                    <div class="field">
+                        <label for="password">Password</label>
+                        <input id="password" type="password" th:field="*{password}" required>
+                    </div>
+                    <div class="field">
+                        <label for="fullName">Full Name</label>
+                        <input id="fullName" th:field="*{fullName}" required>
+                    </div>
+                    <div class="field">
+                        <label for="email">Email</label>
+                        <input id="email" type="email" th:field="*{email}" required>
+                    </div>
+                    <div class="field">
+                        <label for="phone">Phone</label>
+                        <input id="phone" th:field="*{phone}" required>
+                    </div>
+                </div>
+                <div class="card-actions">
+                    <button type="submit">Create Doctor</button>
+                    <a class="button secondary" th:href="@{/doctors}">Cancel</a>
+                </div>
+            </form>
+        </section>
+    </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Care Assistant</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div class="app-shell">
+    <header class="topbar">
+        <div class="brand">Hospital Management System</div>
+        <nav class="nav-actions">
+            <a th:href="@{/dashboard}">Dashboard</a>
+            <a th:href="@{/my-prescriptions}">My Prescriptions</a>
+            <a th:href="@{/patient-reports}">My Reports</a>
+            <form class="logout-form" th:action="@{/logout}" method="post">
+                <button type="submit">Logout</button>
+            </form>
+        </nav>
+    </header>
+    <section class="page-hero">
+        <div class="page-title">
+            <span class="portal-badge">AI Care Assistant</span>
+            <h1>How can I help you today?</h1>
+            <p>Ask about medication schedules, prescription instructions, reminders, or simple summaries of your medical reports.</p>
+        </div>
+    </section>
+    <main class="main">
+        <section class="two-column">
+            <article class="content-card">
+                <h2>Ask your assistant</h2>
+                <form class="form-grid" th:action="@{/chatbot}" method="post">
+                    <div class="field">
+                        <label for="question">Your question</label>
+                        <textarea id="question" name="question" placeholder="Example: remind me about my medicine schedule and explain my prescriptions."></textarea>
+                    </div>
+                    <button type="submit">Ask Assistant</button>
+                </form>
+            </article>
+            <article class="content-card">
+                <h2>Assistant response</h2>
+                <p th:text="${chatbotResponse.response}">Your personalized response will appear here.</p>
+                <div th:if="${!chatbotResponse.reminders.isEmpty()}">
+                    <h3>Upcoming reminders</h3>
+                    <ul class="report-list">
+                        <li th:each="reminder : ${chatbotResponse.reminders}" th:text="${reminder}"></li>
+                    </ul>
+                </div>
+                <div th:if="${!#strings.isEmpty(chatbotResponse.summary)}">
+                    <h3>Report summary</h3>
+                    <p th:text="${chatbotResponse.summary}"></p>
+                </div>
+            </article>
+        </section>
+
+        <section class="content-card" style="margin-top:16px;">
+            <h2>My prescription context</h2>
+            <ul class="report-list" th:if="${!prescriptions.isEmpty()}">
+                <li th:each="prescription : ${prescriptions}">
+                    <strong th:text="${prescription.medicineName}">Medicine</strong>
+                    <p th:text="${prescription.dosage}">Dosage</p>
+                    <p th:text="${prescription.instructions}">Instructions</p>
+                </li>
+            </ul>
+            <div class="empty-state" th:if="${prescriptions.isEmpty()}">No prescriptions are linked to your account yet.</div>
+        </section>
+    </main>
+</div>
+</body>
+</html>

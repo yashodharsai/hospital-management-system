@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medicines</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div class="app-shell">
+    <header class="topbar">
+        <div class="brand">Hospital Management System</div>
+        <nav class="nav-actions">
+            <a th:href="@{/dashboard}">Dashboard</a>
+            <a th:href="@{/patients}">Patients</a>
+            <a th:href="@{/reports}">Reports</a>
+            <form class="logout-form" th:action="@{/logout}" method="post">
+                <button type="submit">Logout</button>
+            </form>
+        </nav>
+    </header>
+    <section class="page-hero">
+        <div class="page-title">
+            <span class="portal-badge">Medicine Inventory</span>
+            <h1>Medicines</h1>
+            <p>Maintain medicine names and dosage information used by hospital staff.</p>
+        </div>
+    </section>
+    <main class="main">
+        <div class="card-actions">
+            <a class="button" th:href="@{/medicines/new}">Add Medicine</a>
+        </div>
+        <section class="table-card">
+            <table th:if="${!medicines.isEmpty()}">
+                <thead>
+                <tr>
+                    <th>Patient</th>
+                    <th>Name</th>
+                    <th>Dosage</th>
+                    <th>Morning</th>
+                    <th>Afternoon</th>
+                    <th>Evening</th>
+                    <th>Night</th>
+                    <th>Food Timing</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="medicine : ${medicines}">
+                    <td th:text="${medicine.patient != null ? medicine.patient.fullName : 'N/A'}">Patient</td>
+                    <td th:text="${medicine.name}">Medicine</td>
+                    <td th:text="${medicine.dosage}">Dosage</td>
+                    <td th:text="${medicine.morning ?: 'No'}">Morning</td>
+                    <td th:text="${medicine.afternoon ?: 'No'}">Afternoon</td>
+                    <td th:text="${medicine.evening ?: 'No'}">Evening</td>
+                    <td th:text="${medicine.night ?: 'No'}">Night</td>
+                    <td th:text="${medicine.foodTiming ?: 'N/A'}">Food Timing</td>
+                    <td>
+                        <div class="card-actions">
+                            <a class="button secondary" th:href="@{/medicines/{id}/edit(id=${medicine.id})}">Edit</a>
+                            <a class="button danger" th:href="@{/medicines/{id}/delete(id=${medicine.id})}">Delete</a>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="empty-state" th:if="${medicines.isEmpty()}">No medicines have been added yet.</div>
+        </section>
+    </main>
+</div>
+</body>
+</html>

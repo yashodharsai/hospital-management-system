@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Reports</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div class="app-shell">
+    <header class="topbar">
+        <div class="brand">Hospital Management System</div>
+        <nav class="nav-actions">
+            <a th:href="@{/dashboard}">Dashboard</a>
+            <a th:href="@{/my-prescriptions}">My Prescriptions</a>
+            <form class="logout-form" th:action="@{/logout}" method="post">
+                <button type="submit">Logout</button>
+            </form>
+        </nav>
+    </header>
+    <section class="page-hero">
+        <div class="page-title">
+            <span class="portal-badge">Patient Portal</span>
+            <h1>My Reports</h1>
+            <p>View and download medical reports linked to your patient account.</p>
+        </div>
+    </section>
+    <main class="main">
+        <section class="list-card">
+            <h2>Your Available Reports</h2>
+            <ul class="report-list" th:if="${!reports.isEmpty()}">
+                <li th:each="report : ${reports}">
+                    <strong th:text="${report.title}">Report</strong>
+                    <p th:text="${report.notes}">Notes</p>
+                    <a class="button secondary" th:href="@{/reports/{id}/download(id=${report.id})}">Download</a>
+                </li>
+            </ul>
+            <div class="empty-state" th:if="${reports.isEmpty()}">No reports are available yet.</div>
+        </section>
+    </main>
+</div>
+</body>
+</html>

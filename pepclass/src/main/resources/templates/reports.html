@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div class="app-shell">
+    <header class="topbar">
+        <div class="brand">Hospital Management System</div>
+        <nav class="nav-actions">
+            <a th:href="@{/dashboard}">Dashboard</a>
+            <a th:href="@{/patients}">Patients</a>
+            <a th:href="@{/medicines}">Medicines</a>
+            <a th:href="@{/prescriptions}">Prescriptions</a>
+            <form class="logout-form" th:action="@{/logout}" method="post">
+                <button type="submit">Logout</button>
+            </form>
+        </nav>
+    </header>
+    <section class="page-hero">
+        <div class="page-title">
+            <span class="portal-badge">Clinical Reports</span>
+            <h1>Reports</h1>
+            <p>Upload, update, download, and manage patient medical reports.</p>
+        </div>
+    </section>
+    <main class="main">
+        <div class="card-actions">
+            <a class="button" th:href="@{/reports/new}">Add Report</a>
+        </div>
+        <section class="table-card">
+            <table th:if="${!reports.isEmpty()}">
+                <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Patient</th>
+                    <th>File</th>
+                    <th>Uploaded By</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="report : ${reports}">
+                    <td th:text="${report.title}">Title</td>
+                    <td th:text="${report.patient.fullName}">Patient</td>
+                    <td th:text="${report.fileName}">report.txt</td>
+                    <td th:text="${report.uploadedBy}">doctor</td>
+                    <td>
+                        <div class="card-actions">
+                            <a class="button secondary" th:href="@{/reports/{id}/download(id=${report.id})}">Download</a>
+                            <a class="button secondary" th:href="@{/reports/{id}/edit(id=${report.id})}">Edit</a>
+                            <a class="button danger" th:href="@{/reports/{id}/delete(id=${report.id})}">Delete</a>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="empty-state" th:if="${reports.isEmpty()}">No reports have been added yet.</div>
+        </section>
+    </main>
+</div>
+</body>
+</html>
