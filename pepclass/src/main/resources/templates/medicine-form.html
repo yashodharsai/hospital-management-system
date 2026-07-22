@@ -3,78 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Medicine Form</title>
+    <title>Medicine Form — MediCare Plus</title>
     <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
 <body>
 <div class="app-shell">
     <header class="topbar">
-        <div class="brand">Hospital Management System</div>
+        <div class="brand">
+            <div class="brand-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+                </svg>
+            </div>
+            <span>MediCare Plus</span>
+        </div>
         <nav class="nav-actions">
             <a th:href="@{/dashboard}">Dashboard</a>
             <a th:href="@{/medicines}">Medicines</a>
-            <form class="logout-form" th:action="@{/logout}" method="post">
-                <button type="submit">Logout</button>
+            <form class="logout-form" th:action="@{/logout}" method="post" style="margin:0;">
+                <button type="submit" class="button secondary" style="min-height: 38px; padding: 0 16px; border-radius: 999px;">Logout</button>
             </form>
         </nav>
     </header>
+
     <section class="page-hero">
         <div class="page-title">
-            <span class="portal-badge">Medicine Inventory</span>
-            <h1>Medicine Details</h1>
-            <p>Add a medicine name and dosage instruction for quick staff reference.</p>
+            <span class="portal-badge">Pharmacy Setup</span>
+            <h1>Add / Edit Medicine Entry</h1>
+            <p>Configure medicine dosage, patient assignment, and scheduled meal timings.</p>
         </div>
     </section>
+
     <main class="main">
-        <section class="content-card">
+        <section class="portal-card" style="max-width: 800px; margin: 0 auto;">
             <form class="form-grid" th:action="@{/medicines}" th:object="${medicine}" method="post">
                 <input type="hidden" th:field="*{id}">
+                
                 <div class="field">
-                    <label for="patient">Available Patient</label>
+                    <label for="patient">Target Patient</label>
                     <select id="patient" th:field="*{patient}" required>
                         <option value="">Select patient</option>
                         <option th:each="patient : ${patients}" th:value="${patient.id}" th:text="${patient.fullName}">Patient</option>
                     </select>
                 </div>
-                <div class="field">
-                    <label for="name">Medicine Name</label>
-                    <input id="name" th:field="*{name}" required>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <div class="field">
+                        <label for="name">Medicine Name</label>
+                        <input id="name" th:field="*{name}" placeholder="e.g. Amoxicillin 500mg" required>
+                    </div>
+                    <div class="field">
+                        <label for="dosage">Dosage Strength</label>
+                        <input id="dosage" th:field="*{dosage}" placeholder="e.g. 1 Tablet" required>
+                    </div>
                 </div>
+
                 <div class="field">
-                    <label for="dosage">Dosage</label>
-                    <input id="dosage" th:field="*{dosage}" required>
-                </div>
-                <div class="field">
-                    <label>Timing</label>
-                    <div class="schedule-grid">
-                        <label class="toggle-box">
-                            <input type="checkbox" th:field="*{morning}" value="1">
+                    <label>Daily Intake Schedule</label>
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
+                        <label style="display: flex; align-items: center; justify-content: center; gap: 8px; border: 1.5px solid #cbd5e1; border-radius: 12px; padding: 12px; cursor: pointer; background: white;">
+                            <input type="checkbox" th:field="*{morning}" value="1" style="width: auto;">
                             <span>Morning</span>
                         </label>
-                        <label class="toggle-box">
-                            <input type="checkbox" th:field="*{afternoon}" value="1">
+                        <label style="display: flex; align-items: center; justify-content: center; gap: 8px; border: 1.5px solid #cbd5e1; border-radius: 12px; padding: 12px; cursor: pointer; background: white;">
+                            <input type="checkbox" th:field="*{afternoon}" value="1" style="width: auto;">
                             <span>Afternoon</span>
                         </label>
-                        <label class="toggle-box">
-                            <input type="checkbox" th:field="*{evening}" value="1">
+                        <label style="display: flex; align-items: center; justify-content: center; gap: 8px; border: 1.5px solid #cbd5e1; border-radius: 12px; padding: 12px; cursor: pointer; background: white;">
+                            <input type="checkbox" th:field="*{evening}" value="1" style="width: auto;">
                             <span>Evening</span>
                         </label>
-                        <label class="toggle-box">
-                            <input type="checkbox" th:field="*{night}" value="1">
+                        <label style="display: flex; align-items: center; justify-content: center; gap: 8px; border: 1.5px solid #cbd5e1; border-radius: 12px; padding: 12px; cursor: pointer; background: white;">
+                            <input type="checkbox" th:field="*{night}" value="1" style="width: auto;">
                             <span>Night</span>
                         </label>
                     </div>
                 </div>
+
                 <div class="field">
-                    <label for="foodTiming">Food Timing</label>
+                    <label for="foodTiming">Food Timing Instructions</label>
                     <select id="foodTiming" th:field="*{foodTiming}">
                         <option value="">Select timing</option>
                         <option value="Before Food">Before Food</option>
                         <option value="After Food">After Food</option>
                     </select>
                 </div>
-                <div class="card-actions">
-                    <button type="submit">Save Medicine</button>
+
+                <div class="card-actions" style="margin-top: 12px;">
+                    <button type="submit" class="btn-pill-primary">Save Medicine Entry</button>
                     <a class="button secondary" th:href="@{/medicines}">Cancel</a>
                 </div>
             </form>

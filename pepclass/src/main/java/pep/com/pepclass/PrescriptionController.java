@@ -16,10 +16,18 @@ public class PrescriptionController {
 
     private final PrescriptionRepository prescriptionRepository;
     private final PatientRepository patientRepository;
+    private final MedicineRepository medicineRepository;
+    private final UserRepository userRepository;
 
-    public PrescriptionController(PrescriptionRepository prescriptionRepository, PatientRepository patientRepository) {
+    public PrescriptionController(
+            PrescriptionRepository prescriptionRepository,
+            PatientRepository patientRepository,
+            MedicineRepository medicineRepository,
+            UserRepository userRepository) {
         this.prescriptionRepository = prescriptionRepository;
         this.patientRepository = patientRepository;
+        this.medicineRepository = medicineRepository;
+        this.userRepository = userRepository;
     }
 
     @GetMapping("/prescriptions")
@@ -62,10 +70,45 @@ public class PrescriptionController {
         return "redirect:/prescriptions";
     }
 
+    @GetMapping("/prescriptions/{id}/print")
+    @PreAuthorize("hasAnyRole('DOCTOR', 'CHAIRMAN', 'PATIENT')")
+    public String printPrescription(@PathVariable String id, Model model, Authentication authentication) {
+        Prescription prescription = prescriptionRepository.findById(id).orElse(null);
+        if (prescription == null) {
+            return "redirect:/dashboard";
+        }
+
+        // Security check: Patients can only print/download their own prescriptions
+        User user = userRepository.findByUsername(authentication.getName()).orElse(null);
+        if (user != null && user.getRole() == Role.PATIENT) {
+            if (prescription.getPatient() == null || prescription.getPatient().getPatientUsername() == null ||
+                !prescription.getPatient().getPatientUsername().equalsIgnoreCase(authentication.getName())) {
+                return "redirect:/my-prescriptions";
+            }
+        }
+
+        String doctorUsername = prescription.getPrescribedBy();
+        User doctor = (doctorUsername != null) ? userRepository.findByUsername(doctorUsername).orElse(null) : null;
+        String doctorName = (doctor != null && doctor.getFullName() != null) ? doctor.getFullName() : (doctorUsername != null ? doctorUsername : "Attending Physician");
+
+        model.addAttribute("prescription", prescription);
+        model.addAttribute("patient", prescription.getPatient());
+        model.addAttribute("doctorName", doctorName);
+
+        return "prescription-print";
+    }
+
+    @GetMapping("/prescriptions/{id}/download")
+    @PreAuthorize("hasAnyRole('DOCTOR', 'CHAIRMAN', 'PATIENT')")
+    public String downloadPrescription(@PathVariable String id, Model model, Authentication authentication) {
+        return printPrescription(id, model, authentication);
+    }
+
     @GetMapping("/my-prescriptions")
     @PreAuthorize("hasRole('PATIENT')")
     public String patientPrescriptions(Model model, Authentication authentication) {
         model.addAttribute("prescriptions", prescriptionRepository.findByPatientPatientUsername(authentication.getName()));
+        model.addAttribute("medicines", medicineRepository.findByPatientPatientUsername(authentication.getName()));
         return "patient-prescriptions";
     }
 }

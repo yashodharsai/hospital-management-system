@@ -3,51 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Patients</title>
+    <title>Patients Directory — MediCare Plus</title>
     <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
 <body>
 <div class="app-shell">
     <header class="topbar">
-        <div class="brand">Hospital Management System</div>
+        <div class="brand">
+            <div class="brand-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+                </svg>
+            </div>
+            <span>MediCare Plus</span>
+        </div>
         <nav class="nav-actions">
             <a th:href="@{/dashboard}">Dashboard</a>
+            <a th:href="@{/patients}" style="color: var(--primary); font-weight: 700;">Patients</a>
             <a th:href="@{/medicines}">Medicines</a>
-            <a th:href="@{/reports}">Reports</a>
             <a th:href="@{/prescriptions}">Prescriptions</a>
-            <form class="logout-form" th:action="@{/logout}" method="post">
-                <button type="submit">Logout</button>
+            <form class="logout-form" th:action="@{/logout}" method="post" style="margin:0;">
+                <button type="submit" class="button secondary" style="min-height: 38px; padding: 0 16px; border-radius: 999px;">Logout</button>
             </form>
         </nav>
     </header>
+
     <section class="page-hero">
         <div class="page-title">
-            <span class="portal-badge">Patient Records</span>
-            <h1>Patients</h1>
-            <p>Review contact details and medical history for registered patients.</p>
+            <span class="portal-badge">Patient Directory</span>
+            <h1>Registered Patients</h1>
+            <p>Review contact information, linked portal accounts, and medical history profiles.</p>
         </div>
     </section>
+
     <main class="main">
-        <div class="card-actions">
-            <a class="button" th:href="@{/patients/new}">Add Patient</a>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+            <h2 style="margin:0; font-size: 1.4rem; font-weight: 800;">Patient Records</h2>
+            <a class="btn-pill-primary" th:href="@{/patients/new}">+ Add New Patient</a>
         </div>
+
         <section class="table-card">
             <table th:if="${!patients.isEmpty()}">
                 <thead>
                 <tr>
-                    <th>Name</th>
+                    <th>Patient Name</th>
                     <th>Contact</th>
                     <th>Email</th>
                     <th>Age</th>
-                    <th>Patient Login</th>
+                    <th>Portal Login</th>
                     <th>Medical History</th>
                     <th>Assigned Medicines</th>
-                    <th>Action</th>
+                    <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="patient : ${patients}">
-                    <td th:text="${patient.fullName}">Patient Name</td>
+                    <td style="font-weight: 700;" th:text="${patient.fullName}">Patient Name</td>
                     <td th:text="${patient.contact}">Contact</td>
                     <td th:text="${patient.email}">Email</td>
                     <td th:text="${patient.age}">Age</td>
@@ -57,18 +68,18 @@
                         <div class="pill-stack" th:if="${!#lists.isEmpty(medicines)}">
                             <span class="pill" th:each="medicine : ${medicines}" th:if="${medicine.patient != null and medicine.patient.id == patient.id}" th:text="${medicine.name}">Medicine</span>
                         </div>
-                        <span class="muted-inline" th:if="${#lists.isEmpty(medicines)}">No medicines</span>
+                        <span class="muted-inline" th:if="${#lists.isEmpty(medicines)}">None</span>
                     </td>
                     <td>
-                        <div class="card-actions compact-actions">
-                            <a class="button secondary" th:href="@{/patients/{id}/edit(id=${patient.id})}">Edit</a>
-                            <a class="button" th:href="@{/medicines/new(patientId=${patient.id})}">Add Medicine</a>
+                        <div style="display: flex; gap: 8px;">
+                            <a class="button secondary" style="min-height: 34px; padding: 0 12px; font-size: 0.82rem;" th:href="@{/patients/{id}/edit(id=${patient.id})}">Edit</a>
+                            <a class="button" style="min-height: 34px; padding: 0 12px; font-size: 0.82rem;" th:href="@{/medicines/new(patientId=${patient.id})}">+ Med</a>
                         </div>
                     </td>
                 </tr>
                 </tbody>
             </table>
-            <div class="empty-state" th:if="${patients.isEmpty()}">No patient records yet.</div>
+            <div class="empty-state" th:if="${patients.isEmpty()}">No patient records found in database.</div>
         </section>
     </main>
 </div>

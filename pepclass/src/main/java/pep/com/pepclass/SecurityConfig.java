@@ -21,14 +21,14 @@ public class SecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/login", "/register", "/css/**", "/js/**", "/images/**").permitAll()
+                .requestMatchers("/", "/login", "/register", "/forgot-password", "/verify-otp", "/reset-password", "/resend-otp", "/css/**", "/js/**", "/images/**").permitAll()
                 .anyRequest().authenticated())
             .formLogin(form -> form
                 .loginPage("/login")
                 .defaultSuccessUrl("/dashboard", true)
                 .permitAll())
             .logout(logout -> logout.logoutSuccessUrl("/login?logout").permitAll())
-            .csrf(csrf -> csrf.ignoringRequestMatchers("/register"));
+            .csrf(csrf -> csrf.ignoringRequestMatchers("/register", "/forgot-password", "/verify-otp", "/reset-password", "/resend-otp"));
         return http.build();
     }
 }

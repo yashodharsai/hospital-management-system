@@ -3,58 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Doctor</title>
+    <title>Add Doctor — MediCare Plus</title>
     <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
 <body>
 <div class="app-shell">
     <header class="topbar">
-        <div class="brand">Hospital Management System</div>
+        <div class="brand">
+            <div class="brand-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+                </svg>
+            </div>
+            <span>MediCare Plus</span>
+        </div>
         <nav class="nav-actions">
             <a th:href="@{/dashboard}">Dashboard</a>
             <a th:href="@{/doctors}">Doctors</a>
-            <form class="logout-form" th:action="@{/logout}" method="post">
-                <button type="submit">Logout</button>
+            <form class="logout-form" th:action="@{/logout}" method="post" style="margin:0;">
+                <button type="submit" class="button secondary" style="min-height: 38px; padding: 0 16px; border-radius: 999px;">Logout</button>
             </form>
         </nav>
     </header>
+
     <section class="page-hero">
         <div class="page-title">
             <span class="portal-badge">Chairman Portal</span>
-            <h1>Add Doctor</h1>
-            <p>Create a secure doctor login managed by the chairman.</p>
+            <h1>Onboard Doctor Account</h1>
+            <p>Create a verified clinical login account for hospital staff doctors.</p>
         </div>
     </section>
+
     <main class="main">
-        <section class="content-card">
+        <section class="portal-card" style="max-width: 800px; margin: 0 auto;">
             <form class="form-grid" th:action="@{/doctors}" th:object="${doctor}" method="post">
                 <div class="errors" th:if="${#fields.hasErrors('*')}">
-                    <div th:each="error : ${#fields.errors('*')}" th:text="${error}">Please check the form.</div>
+                    <div th:each="error : ${#fields.errors('*')}" th:text="${error}">Please check the input errors.</div>
                 </div>
-                <div class="two-column">
+
+                <div class="field">
+                    <label for="fullName">Doctor Full Name</label>
+                    <input id="fullName" th:field="*{fullName}" placeholder="e.g. Dr. Alice Morgan" required>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
                     <div class="field">
-                        <label for="username">Username</label>
-                        <input id="username" th:field="*{username}" required>
+                        <label for="username">Doctor Username</label>
+                        <input id="username" th:field="*{username}" placeholder="e.g. doctor_alice" required>
                     </div>
                     <div class="field">
-                        <label for="password">Password</label>
-                        <input id="password" type="password" th:field="*{password}" required>
-                    </div>
-                    <div class="field">
-                        <label for="fullName">Full Name</label>
-                        <input id="fullName" th:field="*{fullName}" required>
-                    </div>
-                    <div class="field">
-                        <label for="email">Email</label>
-                        <input id="email" type="email" th:field="*{email}" required>
-                    </div>
-                    <div class="field">
-                        <label for="phone">Phone</label>
-                        <input id="phone" th:field="*{phone}" required>
+                        <label for="password">Initial Password</label>
+                        <input id="password" type="password" th:field="*{password}" placeholder="Create password" required>
                     </div>
                 </div>
-                <div class="card-actions">
-                    <button type="submit">Create Doctor</button>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <div class="field">
+                        <label for="email">Email Address</label>
+                        <input id="email" type="email" th:field="*{email}" placeholder="doctor@medicareplus.com" required>
+                    </div>
+                    <div class="field">
+                        <label for="phone">Phone Number</label>
+                        <input id="phone" th:field="*{phone}" placeholder="+1 (555) 000-1111" required>
+                    </div>
+                </div>
+
+                <div class="card-actions" style="margin-top: 12px;">
+                    <button type="submit" class="btn-pill-primary">Create Doctor Account</button>
                     <a class="button secondary" th:href="@{/doctors}">Cancel</a>
                 </div>
             </form>

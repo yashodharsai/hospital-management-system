@@ -3,56 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prescriptions</title>
+    <title>Prescriptions — MediCare Plus</title>
     <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
 <body>
 <div class="app-shell">
     <header class="topbar">
-        <div class="brand">Hospital Management System</div>
+        <div class="brand">
+            <div class="brand-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+                </svg>
+            </div>
+            <span>MediCare Plus</span>
+        </div>
         <nav class="nav-actions">
             <a th:href="@{/dashboard}">Dashboard</a>
+            <a th:href="@{/bmi}">BMI Calculator</a>
             <a th:href="@{/patients}">Patients</a>
             <a th:href="@{/medicines}">Medicines</a>
-            <a th:href="@{/reports}">Reports</a>
-            <form class="logout-form" th:action="@{/logout}" method="post">
-                <button type="submit">Logout</button>
+            <a th:href="@{/prescriptions}" style="color: var(--primary); font-weight: 700;">Prescriptions</a>
+            <form class="logout-form" th:action="@{/logout}" method="post" style="margin:0;">
+                <button type="submit" class="button secondary" style="min-height: 38px; padding: 0 16px; border-radius: 999px;">Logout</button>
             </form>
         </nav>
     </header>
+
     <section class="page-hero">
         <div class="page-title">
-            <span class="portal-badge">Prescriptions</span>
-            <h1>Prescriptions</h1>
-            <p>Prescribe medicines and dosage details for patient treatment.</p>
+            <span class="portal-badge">Clinical Workspace</span>
+            <h1>Issued Prescriptions</h1>
+            <p>Review digital prescriptions written by medical doctors, check schedule timings, and download PDF copies.</p>
         </div>
     </section>
+
     <main class="main">
-        <div class="card-actions">
-            <a class="button" th:href="@{/prescriptions/new}">Add Prescription</a>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+            <h2 style="margin:0; font-size: 1.4rem; font-weight: 800;">Prescription Records</h2>
+            <a class="btn-pill-primary" th:href="@{/prescriptions/new}">+ Issue New Prescription</a>
         </div>
+
         <section class="table-card">
             <table th:if="${!prescriptions.isEmpty()}">
                 <thead>
                 <tr>
-                    <th>Patient</th>
+                    <th>Patient Name</th>
+                    <th>Diagnosis / Condition</th>
                     <th>Medicine</th>
-                    <th>Dosage</th>
+                    <th>Dosage & Timing</th>
                     <th>Prescribed By</th>
-                    <th>Action</th>
+                    <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="prescription : ${prescriptions}">
-                    <td th:text="${prescription.patient.fullName}">Patient</td>
-                    <td th:text="${prescription.medicineName}">Medicine</td>
-                    <td th:text="${prescription.dosage}">Dosage</td>
+                    <td style="font-weight: 700;" th:text="${prescription.patient.fullName}">Patient Name</td>
+                    <td style="color: #b45309; font-weight: 600;" th:text="${prescription.diagnosis ?: 'General Consultation'}">Diagnosis</td>
+                    <td th:text="${prescription.medicineName}" style="color: var(--primary); font-weight: 700;">Medicine</td>
+                    <td>
+                        <span style="display: block; font-weight: 600;" th:text="${prescription.dosage}">Dosage</span>
+                        <span style="font-size: 0.78rem; color: #64748b;" th:text="${prescription.foodTiming ?: 'As advised'}">Food Timing</span>
+                    </td>
                     <td th:text="${prescription.prescribedBy}">Doctor</td>
-                    <td><a class="button danger" th:href="@{/prescriptions/{id}/delete(id=${prescription.id})}">Delete</a></td>
+                    <td>
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            <a class="button secondary" style="min-height: 32px; padding: 0 12px; font-size: 0.82rem;" th:href="@{/prescriptions/{id}/print(id=${prescription.id})}" target="_blank">Print / PDF</a>
+                            <a class="button danger" style="min-height: 32px; padding: 0 12px; font-size: 0.82rem;" th:href="@{/prescriptions/{id}/delete(id=${prescription.id})}">Delete</a>
+                        </div>
+                    </td>
                 </tr>
                 </tbody>
             </table>
-            <div class="empty-state" th:if="${prescriptions.isEmpty()}">No prescriptions have been added yet.</div>
+            <div class="empty-state" th:if="${prescriptions.isEmpty()}">No prescriptions issued yet.</div>
         </section>
     </main>
 </div>

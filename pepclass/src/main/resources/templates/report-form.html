@@ -3,61 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Report Form</title>
+    <title>Upload Medical Report — MediCare Plus</title>
     <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
 <body>
 <div class="app-shell">
     <header class="topbar">
-        <div class="brand">Hospital Management System</div>
+        <div class="brand">
+            <div class="brand-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+                </svg>
+            </div>
+            <span>MediCare Plus</span>
+        </div>
         <nav class="nav-actions">
             <a th:href="@{/dashboard}">Dashboard</a>
             <a th:href="@{/reports}">Reports</a>
-            <form class="logout-form" th:action="@{/logout}" method="post">
-                <button type="submit">Logout</button>
+            <form class="logout-form" th:action="@{/logout}" method="post" style="margin:0;">
+                <button type="submit" class="button secondary" style="min-height: 38px; padding: 0 16px; border-radius: 999px;">Logout</button>
             </form>
         </nav>
     </header>
+
     <section class="page-hero">
         <div class="page-title">
-            <span class="portal-badge">Clinical Reports</span>
-            <h1>Report Details</h1>
-            <p>Create a downloadable report record for a patient.</p>
+            <span class="portal-badge">Chairman Portal</span>
+            <h1>Medical Report Entry</h1>
+            <p>Attach lab results, diagnosis notes, and text content for patient access.</p>
         </div>
     </section>
+
     <main class="main">
-        <section class="content-card">
+        <section class="portal-card" style="max-width: 800px; margin: 0 auto;">
             <form class="form-grid" th:action="@{/reports}" th:object="${report}" method="post">
                 <input type="hidden" th:field="*{id}">
                 <input type="hidden" th:field="*{uploadedBy}">
                 <input type="hidden" th:field="*{createdAt}">
+
                 <div class="field">
-                    <label for="patient">Patient</label>
+                    <label for="patient">Select Patient</label>
                     <select id="patient" th:field="*{patient}" required>
                         <option value="">Select patient</option>
                         <option th:each="patient : ${patients}" th:value="${patient.id}" th:text="${patient.fullName}">Patient</option>
                     </select>
                 </div>
-                <div class="two-column">
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
                     <div class="field">
-                        <label for="title">Title</label>
-                        <input id="title" th:field="*{title}" required>
+                        <label for="title">Report Title</label>
+                        <input id="title" th:field="*{title}" placeholder="e.g. Blood Test & Lipid Profile" required>
                     </div>
                     <div class="field">
-                        <label for="fileName">File Name</label>
-                        <input id="fileName" th:field="*{fileName}">
+                        <label for="fileName">File Attachment Name</label>
+                        <input id="fileName" th:field="*{fileName}" placeholder="e.g. blood_test_july2026.txt">
                     </div>
                 </div>
+
                 <div class="field">
-                    <label for="notes">Notes</label>
-                    <textarea id="notes" th:field="*{notes}"></textarea>
+                    <label for="notes">Summary Notes</label>
+                    <textarea id="notes" th:field="*{notes}" placeholder="Brief diagnostic summary or findings..."></textarea>
                 </div>
+
                 <div class="field">
-                    <label for="reportContent">Report Content</label>
-                    <textarea id="reportContent" th:field="*{reportContent}"></textarea>
+                    <label for="reportContent">Full Medical Report Content</label>
+                    <textarea id="reportContent" th:field="*{reportContent}" placeholder="Detailed report text contents..."></textarea>
                 </div>
-                <div class="card-actions">
-                    <button type="submit">Save Report</button>
+
+                <div class="card-actions" style="margin-top: 12px;">
+                    <button type="submit" class="btn-pill-primary">Save Medical Report</button>
                     <a class="button secondary" th:href="@{/reports}">Cancel</a>
                 </div>
             </form>

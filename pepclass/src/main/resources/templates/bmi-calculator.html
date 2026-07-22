@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BMI Calculator — MediCare Plus</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+    <style>
+        .bmi-gauge-box {
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            margin-bottom: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .category-underweight { background: #eff6ff; border: 2px solid #60a5fa; color: #1e40af; }
+        .category-normal { background: #ecfdf5; border: 2px solid #34d399; color: #065f46; }
+        .category-overweight { background: #fffbeb; border: 2px solid #fbbf24; color: #92400e; }
+        .category-obese { background: #fef2f2; border: 2px solid #f87171; color: #991b1b; }
+    </style>
+</head>
+<body>
+<div class="app-shell">
+    <header class="topbar">
+        <div class="brand">
+            <div class="brand-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+                </svg>
+            </div>
+            <span>MediCare Plus</span>
+        </div>
+        <nav class="nav-actions">
+            <a th:href="@{/dashboard}">Dashboard</a>
+            <a th:href="@{/bmi}" style="color: var(--primary); font-weight: 700;">BMI Calculator</a>
+            <a th:href="@{/patient-reports}">My Reports</a>
+            <a th:href="@{/my-prescriptions}">My Prescriptions</a>
+            <form class="logout-form" th:action="@{/logout}" method="post" style="margin:0;">
+                <button type="submit" class="button secondary" style="min-height: 38px; padding: 0 16px; border-radius: 999px;">Logout</button>
+            </form>
+        </nav>
+    </header>
+
+    <section class="page-hero">
+        <div class="page-title">
+            <span class="portal-badge">Health & Wellness Tool</span>
+            <h1>Body Mass Index (BMI) Calculator</h1>
+            <p>Compute your Body Mass Index, discover your health category, and receive personalized guidance.</p>
+        </div>
+    </section>
+
+    <main class="main">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: start;">
+            <!-- Calculator Form -->
+            <section class="portal-card">
+                <h2 style="font-size: 1.3rem; font-weight: 800; margin: 0 0 16px;">Calculate Your BMI</h2>
+                <div th:if="${error}" style="padding: 12px 16px; background: #fef2f2; border: 1px solid #fca5a5; color: #991b1b; border-radius: 10px; margin-bottom: 16px;" th:text="${error}">Error</div>
+
+                <form th:action="@{/bmi/calculate}" method="post" class="form-grid">
+                    <div class="field">
+                        <label for="height">Height (in cm)</label>
+                        <input id="height" name="height" type="number" step="0.1" min="50" max="250" placeholder="e.g. 175" required>
+                    </div>
+                    <div class="field">
+                        <label for="weight">Weight (in kg)</label>
+                        <input id="weight" name="weight" type="number" step="0.1" min="20" max="300" placeholder="e.g. 70" required>
+                    </div>
+                    <button type="submit" class="btn-pill-primary" style="margin-top: 8px;">Calculate BMI & Save</button>
+                </form>
+
+                <div style="margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--line);">
+                    <h4 style="margin: 0 0 10px; font-weight: 700; color: #475569;">Standard BMI Categories</h4>
+                    <ul style="margin: 0; padding-left: 20px; font-size: 0.88rem; color: #64748b; line-height: 1.6;">
+                        <li><strong>Underweight:</strong> &lt; 18.5</li>
+                        <li><strong>Normal Weight:</strong> 18.5 – 24.9</li>
+                        <li><strong>Overweight:</strong> 25.0 – 29.9</li>
+                        <li><strong>Obese:</strong> &ge; 30.0</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Result Card -->
+            <section class="portal-card">
+                <h2 style="font-size: 1.3rem; font-weight: 800; margin: 0 0 16px;">Your Latest Result</h2>
+
+                <div th:if="${latestRecord != null}">
+                    <div th:class="'bmi-gauge-box ' + (${latestRecord.category == 'Underweight' ? 'category-underweight' : (latestRecord.category == 'Normal Weight' ? 'category-normal' : (latestRecord.category == 'Overweight' ? 'category-overweight' : 'category-obese'))})">
+                        <span style="font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.85;">Current Body Mass Index</span>
+                        <div style="font-size: 3.2rem; font-weight: 900; margin: 6px 0;" th:text="${latestRecord.bmiValue}">0.0</div>
+                        <span style="font-size: 1.1rem; font-weight: 800; padding: 4px 16px; border-radius: 999px; background: rgba(255,255,255,0.7); display: inline-block;" th:text="${latestRecord.category}">Category</span>
+                    </div>
+
+                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px;">
+                        <h4 style="margin: 0 0 8px; font-size: 1rem; color: #1e3a8a; font-weight: 800;">💡 Personal Health Guidance</h4>
+                        <p style="margin: 0; color: #334155; font-size: 0.94rem; line-height: 1.6;" th:text="${latestRecord.healthAdvice}">Health Advice</p>
+                    </div>
+                </div>
+
+                <div th:if="${latestRecord == null}" class="empty-state">
+                    Enter your height and weight above to calculate your BMI and view custom health guidance.
+                </div>
+            </section>
+        </div>
+
+        <!-- History Section -->
+        <section class="portal-card" style="margin-top: 32px;" th:if="${bmiRecords != null && !bmiRecords.isEmpty()}">
+            <h2 style="font-size: 1.3rem; font-weight: 800; margin: 0 0 16px;">Your BMI Log History</h2>
+            <div style="overflow-x: auto;">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Height (cm)</th>
+                            <th>Weight (kg)</th>
+                            <th>BMI Score</th>
+                            <th>Category</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="rec : ${bmiRecords}">
+                            <td th:text="${#temporals.format(rec.createdAt, 'dd MMM yyyy, hh:mm a')}">Date</td>
+                            <td th:text="${rec.heightCm}">Height</td>
+                            <td th:text="${rec.weightKg}">Weight</td>
+                            <td style="font-weight: 800;" th:text="${rec.bmiValue}">BMI</td>
+                            <td>
+                                <span class="pill" th:text="${rec.category}">Category</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</div>
+</body>
+</html>

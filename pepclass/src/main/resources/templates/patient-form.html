@@ -3,68 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Patient Form</title>
+    <title>Patient Form — MediCare Plus</title>
     <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
 <body>
 <div class="app-shell">
     <header class="topbar">
-        <div class="brand">Hospital Management System</div>
+        <div class="brand">
+            <div class="brand-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+                </svg>
+            </div>
+            <span>MediCare Plus</span>
+        </div>
         <nav class="nav-actions">
             <a th:href="@{/dashboard}">Dashboard</a>
             <a th:href="@{/patients}">Patients</a>
-            <form class="logout-form" th:action="@{/logout}" method="post">
-                <button type="submit">Logout</button>
+            <form class="logout-form" th:action="@{/logout}" method="post" style="margin:0;">
+                <button type="submit" class="button secondary" style="min-height: 38px; padding: 0 16px; border-radius: 999px;">Logout</button>
             </form>
         </nav>
     </header>
+
     <section class="page-hero">
         <div class="page-title">
-            <span class="portal-badge">Patient Records</span>
-            <h1>Patient Details</h1>
-            <p>Add or update a patient's core contact information and medical notes.</p>
+            <span class="portal-badge">Patient Management</span>
+            <h1>Patient Details Form</h1>
+            <p>Enter contact credentials, linked login accounts, and medical history notes.</p>
         </div>
     </section>
+
     <main class="main">
-        <section class="content-card">
+        <section class="portal-card" style="max-width: 800px; margin: 0 auto;">
             <form class="form-grid" th:action="@{/patients}" th:object="${patient}" method="post">
                 <input type="hidden" th:field="*{id}">
+                
                 <div class="field">
                     <label for="fullName">Full Name</label>
-                    <input id="fullName" th:field="*{fullName}" required>
+                    <input id="fullName" th:field="*{fullName}" placeholder="e.g. Robert Johnson" required>
                 </div>
-                <div class="two-column">
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
                     <div class="field">
-                        <label for="contact">Contact</label>
-                        <input id="contact" th:field="*{contact}" required>
+                        <label for="contact">Contact Number</label>
+                        <input id="contact" th:field="*{contact}" placeholder="+1 (555) 123-4567" required>
                     </div>
                     <div class="field">
-                        <label for="email">Email</label>
-                        <input id="email" type="email" th:field="*{email}">
+                        <label for="email">Email Address</label>
+                        <input id="email" type="email" th:field="*{email}" placeholder="patient@example.com">
                     </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
                     <div class="field">
                         <label for="age">Age</label>
-                        <input id="age" type="number" min="0" th:field="*{age}">
+                        <input id="age" type="number" min="0" th:field="*{age}" placeholder="e.g. 42">
                     </div>
                     <div class="field">
                         <label for="gender">Gender</label>
-                        <input id="gender" th:field="*{gender}">
+                        <input id="gender" th:field="*{gender}" placeholder="Male / Female / Other">
                     </div>
                 </div>
+
                 <div class="field">
-                    <label for="patientUsername">Linked Patient Username</label>
-                    <input id="patientUsername" th:field="*{patientUsername}">
+                    <label for="patientUsername">Linked Patient Portal Username</label>
+                    <input id="patientUsername" th:field="*{patientUsername}" placeholder="e.g. patient123">
                 </div>
+
                 <div class="field">
-                    <label for="address">Address</label>
-                    <textarea id="address" th:field="*{address}"></textarea>
+                    <label for="address">Residential Address</label>
+                    <textarea id="address" th:field="*{address}" placeholder="Street, City, State..."></textarea>
                 </div>
+
                 <div class="field">
-                    <label for="medicalHistory">Medical History</label>
-                    <textarea id="medicalHistory" th:field="*{medicalHistory}"></textarea>
+                    <label for="medicalHistory">Medical History & Allergies</label>
+                    <textarea id="medicalHistory" th:field="*{medicalHistory}" placeholder="Notes on past conditions, allergies, or surgery history..."></textarea>
                 </div>
-                <div class="card-actions">
-                    <button type="submit">Save Patient</button>
+
+                <div class="card-actions" style="margin-top: 12px;">
+                    <button type="submit" class="btn-pill-primary">Save Patient Profile</button>
                     <a class="button secondary" th:href="@{/patients}">Cancel</a>
                 </div>
             </form>

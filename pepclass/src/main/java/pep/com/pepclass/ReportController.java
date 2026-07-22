@@ -28,14 +28,14 @@ public class ReportController {
     }
 
     @GetMapping("/reports")
-    @PreAuthorize("hasAnyRole('DOCTOR', 'CHAIRMAN')")
+    @PreAuthorize("hasRole('CHAIRMAN')")
     public String reports(Model model) {
         model.addAttribute("reports", medicalReportRepository.findAll());
         return "reports";
     }
 
     @GetMapping("/reports/new")
-    @PreAuthorize("hasAnyRole('DOCTOR', 'CHAIRMAN')")
+    @PreAuthorize("hasRole('CHAIRMAN')")
     public String newReport(Model model) {
         model.addAttribute("report", new MedicalReport());
         model.addAttribute("patients", patientRepository.findAll());
@@ -43,7 +43,7 @@ public class ReportController {
     }
 
     @GetMapping("/reports/{id}/edit")
-    @PreAuthorize("hasAnyRole('DOCTOR', 'CHAIRMAN')")
+    @PreAuthorize("hasRole('CHAIRMAN')")
     public String editReport(@PathVariable String id, Model model) {
         model.addAttribute("report", medicalReportRepository.findById(id).orElseThrow());
         model.addAttribute("patients", patientRepository.findAll());
@@ -51,7 +51,7 @@ public class ReportController {
     }
 
     @PostMapping("/reports")
-    @PreAuthorize("hasAnyRole('DOCTOR', 'CHAIRMAN')")
+    @PreAuthorize("hasRole('CHAIRMAN')")
     public String saveReport(
             @Valid @ModelAttribute("report") MedicalReport report,
             BindingResult result,
@@ -72,21 +72,20 @@ public class ReportController {
     }
 
     @GetMapping("/reports/{id}/delete")
-    @PreAuthorize("hasAnyRole('DOCTOR', 'CHAIRMAN')")
+    @PreAuthorize("hasRole('CHAIRMAN')")
     public String deleteReport(@PathVariable String id) {
         medicalReportRepository.deleteById(id);
         return "redirect:/reports";
     }
 
     @GetMapping("/reports/{id}/download")
-    @PreAuthorize("hasAnyRole('DOCTOR', 'CHAIRMAN') or hasRole('PATIENT')")
+    @PreAuthorize("hasRole('CHAIRMAN') or hasRole('PATIENT')")
     public ResponseEntity<byte[]> downloadReport(@PathVariable String id, Authentication authentication) {
         MedicalReport report = medicalReportRepository.findById(id).orElseThrow();
         boolean patientOwnsReport = report.getPatient().getPatientUsername() != null
                 && report.getPatient().getPatientUsername().equals(authentication.getName());
         boolean staff = authentication.getAuthorities().stream()
-                .anyMatch(authority -> authority.getAuthority().equals("ROLE_DOCTOR")
-                        || authority.getAuthority().equals("ROLE_CHAIRMAN"));
+                .anyMatch(authority -> authority.getAuthority().equals("ROLE_CHAIRMAN"));
         if (!staff && !patientOwnsReport) {
             return ResponseEntity.status(403).build();
         }

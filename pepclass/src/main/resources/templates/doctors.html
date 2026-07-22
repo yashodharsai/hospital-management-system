@@ -3,55 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doctors</title>
+    <title>Doctor Staff Directory — MediCare Plus</title>
     <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
 <body>
 <div class="app-shell">
     <header class="topbar">
-        <div class="brand">Hospital Management System</div>
+        <div class="brand">
+            <div class="brand-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+                </svg>
+            </div>
+            <span>MediCare Plus</span>
+        </div>
         <nav class="nav-actions">
             <a th:href="@{/dashboard}">Dashboard</a>
             <a th:href="@{/patients}">Patients</a>
             <a th:href="@{/reports}">Reports</a>
-            <form class="logout-form" th:action="@{/logout}" method="post">
-                <button type="submit">Logout</button>
+            <a th:href="@{/doctors}" style="color: var(--primary); font-weight: 700;">Doctors</a>
+            <form class="logout-form" th:action="@{/logout}" method="post" style="margin:0;">
+                <button type="submit" class="button secondary" style="min-height: 38px; padding: 0 16px; border-radius: 999px;">Logout</button>
             </form>
         </nav>
     </header>
+
     <section class="page-hero">
         <div class="page-title">
             <span class="portal-badge">Chairman Portal</span>
             <h1>Doctor Accounts</h1>
-            <p>Create and manage doctor logins. Doctors cannot self-register.</p>
+            <p>Create and manage verified doctor login credentials across clinical departments.</p>
         </div>
     </section>
+
     <main class="main">
-        <div class="card-actions">
-            <a class="button" th:href="@{/doctors/new}">Add Doctor</a>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+            <h2 style="margin:0; font-size: 1.4rem; font-weight: 800;">Clinical Staff</h2>
+            <a class="btn-pill-primary" th:href="@{/doctors/new}">+ Onboard New Doctor</a>
         </div>
+
         <section class="table-card">
             <table th:if="${!doctors.isEmpty()}">
                 <thead>
                 <tr>
-                    <th>Name</th>
+                    <th>Doctor Name</th>
                     <th>Username</th>
-                    <th>Email</th>
+                    <th>Email Address</th>
                     <th>Phone</th>
                     <th>Action</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="doctor : ${doctors}">
-                    <td th:text="${doctor.fullName}">Doctor</td>
-                    <td th:text="${doctor.username}">username</td>
-                    <td th:text="${doctor.email}">email</td>
-                    <td th:text="${doctor.phone}">phone</td>
-                    <td><a class="button danger" th:href="@{/doctors/{id}/delete(id=${doctor.id})}">Delete</a></td>
+                    <td style="font-weight: 700;" th:text="${doctor.fullName}">Doctor Name</td>
+                    <td><span class="pill" th:text="${doctor.username}">doctor</span></td>
+                    <td th:text="${doctor.email}">Email</td>
+                    <td th:text="${doctor.phone}">Phone</td>
+                    <td>
+                        <a class="button danger" style="min-height: 32px; padding: 0 12px; font-size: 0.82rem;" th:href="@{/doctors/{id}/delete(id=${doctor.id})}">Delete</a>
+                    </td>
                 </tr>
                 </tbody>
             </table>
-            <div class="empty-state" th:if="${doctors.isEmpty()}">No doctor accounts yet.</div>
+            <div class="empty-state" th:if="${doctors.isEmpty()}">No doctor accounts created yet.</div>
         </section>
     </main>
 </div>

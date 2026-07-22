@@ -3,40 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Prescriptions</title>
+    <title>My Prescriptions — MediCare Plus</title>
     <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
 <body>
 <div class="app-shell">
     <header class="topbar">
-        <div class="brand">Hospital Management System</div>
+        <div class="brand">
+            <div class="brand-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+                </svg>
+            </div>
+            <span>MediCare Plus</span>
+        </div>
         <nav class="nav-actions">
             <a th:href="@{/dashboard}">Dashboard</a>
+            <a th:href="@{/bmi}">BMI Calculator</a>
             <a th:href="@{/patient-reports}">My Reports</a>
-            <form class="logout-form" th:action="@{/logout}" method="post">
-                <button type="submit">Logout</button>
+            <a th:href="@{/my-prescriptions}" style="color: var(--primary); font-weight: 700;">My Prescriptions</a>
+            <form class="logout-form" th:action="@{/logout}" method="post" style="margin:0;">
+                <button type="submit" class="button secondary" style="min-height: 38px; padding: 0 16px; border-radius: 999px;">Logout</button>
             </form>
         </nav>
     </header>
+
     <section class="page-hero">
         <div class="page-title">
             <span class="portal-badge">Patient Portal</span>
-            <h1>My Prescriptions</h1>
-            <p>View medicines and dosage instructions prescribed for you.</p>
+            <h1>My Prescriptions & Regimen</h1>
+            <p>Access your prescribed medicines, intake schedules, diagnosis details, and download digital PDF prescriptions.</p>
         </div>
     </section>
+
     <main class="main">
-        <section class="list-card">
-            <h2>Your Prescriptions</h2>
-            <ul class="report-list" th:if="${!prescriptions.isEmpty()}">
-                <li th:each="prescription : ${prescriptions}">
-                    <strong th:text="${prescription.medicineName}">Medicine</strong>
-                    <p th:text="${prescription.dosage}">Dosage</p>
-                    <p th:text="${prescription.instructions}">Instructions</p>
-                </li>
-            </ul>
-            <div class="empty-state" th:if="${prescriptions.isEmpty()}">No prescriptions are available yet.</div>
-        </section>
+        <div style="display: grid; gap: 32px;">
+            <section class="portal-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 style="font-size: 1.3rem; font-weight: 800; margin: 0;">Active Doctor Prescriptions</h2>
+                </div>
+
+                <div th:if="${!prescriptions.isEmpty()}" style="display: grid; gap: 20px;">
+                    <div th:each="prescription : ${prescriptions}" style="border: 1px solid var(--line); border-radius: 16px; padding: 24px; background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px; border-bottom: 1px solid #f1f5f9; padding-bottom: 14px; margin-bottom: 14px;">
+                            <div>
+                                <strong style="font-size: 1.25rem; color: var(--primary); display: block;" th:text="${prescription.medicineName}">Medicine</strong>
+                                <span th:if="${prescription.diagnosis != null && !prescription.diagnosis.isBlank()}" style="font-size: 0.88rem; color: #b45309; font-weight: 600; background: #fef3c7; padding: 2px 10px; border-radius: 999px; display: inline-block; margin-top: 4px;" th:text="'Diagnosis: ' + ${prescription.diagnosis}">Diagnosis</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span class="pill" th:text="${prescription.dosage}">Dosage</span>
+                                <a th:href="@{/prescriptions/{id}/print(id=${prescription.id})}" class="btn-pill-primary" style="padding: 6px 14px; font-size: 0.85rem;" target="_blank">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right: 4px;">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+                                    </svg>
+                                    Download PDF
+                                </a>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px;">
+                            <span class="pill" th:if="${prescription.morning != null and !prescription.morning.isBlank()}">🌅 Morning</span>
+                            <span class="pill" th:if="${prescription.afternoon != null and !prescription.afternoon.isBlank()}">☀️ Afternoon</span>
+                            <span class="pill" th:if="${prescription.evening != null and !prescription.evening.isBlank()}">🌆 Evening</span>
+                            <span class="pill" th:if="${prescription.night != null and !prescription.night.isBlank()}">🌙 Night</span>
+                            <span class="pill" th:if="${prescription.foodTiming != null and !prescription.foodTiming.isBlank()}" th:text="${prescription.foodTiming}" style="background: #e0f2fe; color: #0369a1; border-color: #bae6fd;">Food Timing</span>
+                            <span class="pill" th:if="${prescription.duration != null and !prescription.duration.isBlank()}" th:text="'Duration: ' + ${prescription.duration}" style="background: #f1f5f9; color: #475569; border-color: #e2e8f0;">Duration</span>
+                        </div>
+
+                        <p style="margin: 0; color: #475467; font-size: 0.95rem; line-height: 1.5;" th:text="${prescription.instructions ?: 'Follow standard dosage instructions as advised.'}">Instructions</p>
+
+                        <div th:if="${prescription.followUpDate != null && !prescription.followUpDate.isBlank()}" style="margin-top: 12px; font-size: 0.85rem; color: #059669; font-weight: 700;">
+                            📅 Next Follow-Up Date: <span th:text="${prescription.followUpDate}">Date</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="empty-state" th:if="${prescriptions.isEmpty()}">No active prescriptions available for your account yet.</div>
+            </section>
+        </div>
     </main>
 </div>
 </body>

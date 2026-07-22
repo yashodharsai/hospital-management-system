@@ -17,13 +17,30 @@ public class AdminDataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        seedDemoUser("chairman", "chairman123", "Hospital Chairman", Role.CHAIRMAN);
+        seedDemoUser("chairmen", "chairmen123", "Hospital Chairman", Role.CHAIRMAN);
         seedDemoUser("doctor", "doctor123", "Dr. Alice Morgan", Role.DOCTOR);
         seedDemoUser("patient", "patient123", "Patient Bob Carter", Role.PATIENT);
     }
 
     private void seedDemoUser(String username, String rawPassword, String fullName, Role role) {
-        if (userRepository.findByUsername(username).isEmpty()) {
+        userRepository.findByUsername(username).ifPresentOrElse(user -> {
+            boolean changed = false;
+            if (!passwordEncoder.matches(rawPassword, user.getPasswordHash())) {
+                user.setPasswordHash(passwordEncoder.encode(rawPassword));
+                changed = true;
+            }
+            if (user.getRole() != role) {
+                user.setRole(role);
+                changed = true;
+            }
+            if (!user.isEnabled()) {
+                user.setEnabled(true);
+                changed = true;
+            }
+            if (changed) {
+                userRepository.save(user);
+            }
+        }, () -> {
             User user = new User();
             user.setUsername(username);
             user.setPasswordHash(passwordEncoder.encode(rawPassword));
@@ -33,6 +50,6 @@ public class AdminDataInitializer implements CommandLineRunner {
             user.setRole(role);
             user.setEnabled(true);
             userRepository.save(user);
-        }
+        });
     }
 }

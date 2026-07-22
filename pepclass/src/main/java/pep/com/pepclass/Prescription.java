@@ -25,6 +25,22 @@ public class Prescription {
 
     private String prescribedBy;
 
+    private String morning;
+
+    private String afternoon;
+
+    private String evening;
+
+    private String night;
+
+    private String foodTiming;
+
+    private String duration;
+
+    private String diagnosis;
+
+    private String followUpDate;
+
     private LocalDateTime createdAt = LocalDateTime.now();
 
     public String getId() {
@@ -73,6 +89,70 @@ public class Prescription {
 
     public void setPrescribedBy(String prescribedBy) {
         this.prescribedBy = prescribedBy;
+    }
+
+    public String getMorning() {
+        return morning;
+    }
+
+    public void setMorning(String morning) {
+        this.morning = morning;
+    }
+
+    public String getAfternoon() {
+        return afternoon;
+    }
+
+    public void setAfternoon(String afternoon) {
+        this.afternoon = afternoon;
+    }
+
+    public String getEvening() {
+        return evening;
+    }
+
+    public void setEvening(String evening) {
+        this.evening = evening;
+    }
+
+    public String getNight() {
+        return night;
+    }
+
+    public void setNight(String night) {
+        this.night = night;
+    }
+
+    public String getFoodTiming() {
+        return foodTiming;
+    }
+
+    public void setFoodTiming(String foodTiming) {
+        this.foodTiming = foodTiming;
+    }
+
+    public String getDuration() {
+        return duration;
+    }
+
+    public void setDuration(String duration) {
+        this.duration = duration;
+    }
+
+    public String getDiagnosis() {
+        return diagnosis;
+    }
+
+    public void setDiagnosis(String diagnosis) {
+        this.diagnosis = diagnosis;
+    }
+
+    public String getFollowUpDate() {
+        return followUpDate;
+    }
+
+    public void setFollowUpDate(String followUpDate) {
+        this.followUpDate = followUpDate;
     }
 
     public LocalDateTime getCreatedAt() {

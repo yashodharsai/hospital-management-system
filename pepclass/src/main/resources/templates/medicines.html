@@ -3,68 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Medicines</title>
+    <title>Medicines — MediCare Plus</title>
     <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
 <body>
 <div class="app-shell">
     <header class="topbar">
-        <div class="brand">Hospital Management System</div>
+        <div class="brand">
+            <div class="brand-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+                </svg>
+            </div>
+            <span>MediCare Plus</span>
+        </div>
         <nav class="nav-actions">
             <a th:href="@{/dashboard}">Dashboard</a>
             <a th:href="@{/patients}">Patients</a>
-            <a th:href="@{/reports}">Reports</a>
-            <form class="logout-form" th:action="@{/logout}" method="post">
-                <button type="submit">Logout</button>
+            <a th:href="@{/medicines}" style="color: var(--primary); font-weight: 700;">Medicines</a>
+            <a th:href="@{/prescriptions}">Prescriptions</a>
+            <form class="logout-form" th:action="@{/logout}" method="post" style="margin:0;">
+                <button type="submit" class="button secondary" style="min-height: 38px; padding: 0 16px; border-radius: 999px;">Logout</button>
             </form>
         </nav>
     </header>
+
     <section class="page-hero">
         <div class="page-title">
-            <span class="portal-badge">Medicine Inventory</span>
-            <h1>Medicines</h1>
-            <p>Maintain medicine names and dosage information used by hospital staff.</p>
+            <span class="portal-badge">Pharmacy Inventory</span>
+            <h1>Medicine Catalog</h1>
+            <p>Maintain medication entries, patient assignments, and daily dosage timing schedules.</p>
         </div>
     </section>
+
     <main class="main">
-        <div class="card-actions">
-            <a class="button" th:href="@{/medicines/new}">Add Medicine</a>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+            <h2 style="margin:0; font-size: 1.4rem; font-weight: 800;">Prescribed Medicines</h2>
+            <a class="btn-pill-primary" th:href="@{/medicines/new}">+ Add Medicine Entry</a>
         </div>
+
         <section class="table-card">
             <table th:if="${!medicines.isEmpty()}">
                 <thead>
                 <tr>
                     <th>Patient</th>
-                    <th>Name</th>
+                    <th>Medicine</th>
                     <th>Dosage</th>
                     <th>Morning</th>
                     <th>Afternoon</th>
                     <th>Evening</th>
                     <th>Night</th>
-                    <th>Food Timing</th>
-                    <th>Action</th>
+                    <th>Food Instructions</th>
+                    <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="medicine : ${medicines}">
-                    <td th:text="${medicine.patient != null ? medicine.patient.fullName : 'N/A'}">Patient</td>
-                    <td th:text="${medicine.name}">Medicine</td>
+                    <td style="font-weight: 700;" th:text="${medicine.patient != null ? medicine.patient.fullName : 'N/A'}">Patient</td>
+                    <td th:text="${medicine.name}" style="color: var(--primary); font-weight: 700;">Medicine</td>
                     <td th:text="${medicine.dosage}">Dosage</td>
-                    <td th:text="${medicine.morning ?: 'No'}">Morning</td>
-                    <td th:text="${medicine.afternoon ?: 'No'}">Afternoon</td>
-                    <td th:text="${medicine.evening ?: 'No'}">Evening</td>
-                    <td th:text="${medicine.night ?: 'No'}">Night</td>
-                    <td th:text="${medicine.foodTiming ?: 'N/A'}">Food Timing</td>
+                    <td><span class="pill" th:if="${medicine.morning == '1'}">Yes</span><span style="color:#94a3b8;" th:if="${medicine.morning != '1'}">No</span></td>
+                    <td><span class="pill" th:if="${medicine.afternoon == '1'}">Yes</span><span style="color:#94a3b8;" th:if="${medicine.afternoon != '1'}">No</span></td>
+                    <td><span class="pill" th:if="${medicine.evening == '1'}">Yes</span><span style="color:#94a3b8;" th:if="${medicine.evening != '1'}">No</span></td>
+                    <td><span class="pill" th:if="${medicine.night == '1'}">Yes</span><span style="color:#94a3b8;" th:if="${medicine.night != '1'}">No</span></td>
+                    <td th:text="${medicine.foodTiming ?: 'Standard'}">Food Timing</td>
                     <td>
-                        <div class="card-actions">
-                            <a class="button secondary" th:href="@{/medicines/{id}/edit(id=${medicine.id})}">Edit</a>
-                            <a class="button danger" th:href="@{/medicines/{id}/delete(id=${medicine.id})}">Delete</a>
+                        <div style="display: flex; gap: 8px;">
+                            <a class="button secondary" style="min-height: 32px; padding: 0 12px; font-size: 0.82rem;" th:href="@{/medicines/{id}/edit(id=${medicine.id})}">Edit</a>
+                            <a class="button danger" style="min-height: 32px; padding: 0 12px; font-size: 0.82rem;" th:href="@{/medicines/{id}/delete(id=${medicine.id})}">Delete</a>
                         </div>
                     </td>
                 </tr>
                 </tbody>
             </table>
-            <div class="empty-state" th:if="${medicines.isEmpty()}">No medicines have been added yet.</div>
+            <div class="empty-state" th:if="${medicines.isEmpty()}">No medicines recorded yet.</div>
         </section>
     </main>
 </div>

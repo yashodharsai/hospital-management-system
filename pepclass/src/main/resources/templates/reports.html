@@ -3,62 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reports</title>
+    <title>Medical Reports — MediCare Plus</title>
     <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
 <body>
 <div class="app-shell">
     <header class="topbar">
-        <div class="brand">Hospital Management System</div>
+        <div class="brand">
+            <div class="brand-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+                </svg>
+            </div>
+            <span>MediCare Plus</span>
+        </div>
         <nav class="nav-actions">
             <a th:href="@{/dashboard}">Dashboard</a>
             <a th:href="@{/patients}">Patients</a>
-            <a th:href="@{/medicines}">Medicines</a>
-            <a th:href="@{/prescriptions}">Prescriptions</a>
-            <form class="logout-form" th:action="@{/logout}" method="post">
-                <button type="submit">Logout</button>
+            <a th:href="@{/reports}" style="color: var(--primary); font-weight: 700;">Reports</a>
+            <a th:href="@{/doctors}">Doctors</a>
+            <form class="logout-form" th:action="@{/logout}" method="post" style="margin:0;">
+                <button type="submit" class="button secondary" style="min-height: 38px; padding: 0 16px; border-radius: 999px;">Logout</button>
             </form>
         </nav>
     </header>
+
     <section class="page-hero">
         <div class="page-title">
-            <span class="portal-badge">Clinical Reports</span>
-            <h1>Reports</h1>
-            <p>Upload, update, download, and manage patient medical reports.</p>
+            <span class="portal-badge">Chairman Portal</span>
+            <h1>Medical Reports Directory</h1>
+            <p>Upload, manage, and distribute official lab results and diagnostic reports.</p>
         </div>
     </section>
+
     <main class="main">
-        <div class="card-actions">
-            <a class="button" th:href="@{/reports/new}">Add Report</a>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+            <h2 style="margin:0; font-size: 1.4rem; font-weight: 800;">Diagnostic Files</h2>
+            <a class="btn-pill-primary" th:href="@{/reports/new}">+ Upload Medical Report</a>
         </div>
+
         <section class="table-card">
             <table th:if="${!reports.isEmpty()}">
                 <thead>
                 <tr>
-                    <th>Title</th>
-                    <th>Patient</th>
-                    <th>File</th>
-                    <th>Uploaded By</th>
+                    <th>Report Title</th>
+                    <th>Patient Name</th>
+                    <th>Attached File</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="report : ${reports}">
-                    <td th:text="${report.title}">Title</td>
+                    <td style="font-weight: 700; color: var(--ink);" th:text="${report.title}">Title</td>
                     <td th:text="${report.patient.fullName}">Patient</td>
-                    <td th:text="${report.fileName}">report.txt</td>
-                    <td th:text="${report.uploadedBy}">doctor</td>
+                    <td><span class="pill" th:text="${report.fileName}">report.txt</span></td>
                     <td>
-                        <div class="card-actions">
-                            <a class="button secondary" th:href="@{/reports/{id}/download(id=${report.id})}">Download</a>
-                            <a class="button secondary" th:href="@{/reports/{id}/edit(id=${report.id})}">Edit</a>
-                            <a class="button danger" th:href="@{/reports/{id}/delete(id=${report.id})}">Delete</a>
+                        <div style="display: flex; gap: 8px;">
+                            <a class="button secondary" style="min-height: 32px; padding: 0 12px; font-size: 0.82rem;" th:href="@{/reports/{id}/download(id=${report.id})}">Download</a>
+                            <a class="button secondary" style="min-height: 32px; padding: 0 12px; font-size: 0.82rem;" th:href="@{/reports/{id}/edit(id=${report.id})}">Edit</a>
+                            <a class="button danger" style="min-height: 32px; padding: 0 12px; font-size: 0.82rem;" th:href="@{/reports/{id}/delete(id=${report.id})}">Delete</a>
                         </div>
                     </td>
                 </tr>
                 </tbody>
             </table>
-            <div class="empty-state" th:if="${reports.isEmpty()}">No reports have been added yet.</div>
+            <div class="empty-state" th:if="${reports.isEmpty()}">No diagnostic reports uploaded yet.</div>
         </section>
     </main>
 </div>
