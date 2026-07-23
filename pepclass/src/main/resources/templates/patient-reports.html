@@ -36,13 +36,44 @@
     </section>
 
     <main class="main">
+        <!-- Discharge Status Card for Patient -->
+        <section th:if="${latestDischargeReport != null}" style="border: 2px solid #059669; background: linear-gradient(135deg, #ecfdf5 0%, #ffffff 100%); border-radius: 16px; padding: 24px; margin-bottom: 24px; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.08);">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px; margin-bottom: 12px;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <div style="width: 40px; height: 40px; border-radius: 10px; background: #10b981; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.3rem;">🏥</div>
+                    <div>
+                        <h2 style="font-size: 1.25rem; font-weight: 800; color: #065f46; margin: 0;">Hospital Discharge Status</h2>
+                        <span style="font-size: 0.88rem; color: #047857;" th:text="${'Linked Report: ' + latestDischargeReport.title}">Report</span>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <span style="background: #10b981; color: white; padding: 6px 14px; border-radius: 999px; font-weight: 700; font-size: 0.88rem;"
+                          th:text="${latestDischargeReport.dischargeStatus ?: 'Scheduled for Discharge'}">Status</span>
+                </div>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 16px; padding-top: 16px; border-top: 1px dashed #a7f3d0;">
+                <div>
+                    <span style="font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.5px; color: #047857; font-weight: 700; display: block;">Target / Confirmed Discharge Date</span>
+                    <strong style="font-size: 1.3rem; color: #064e3b; display: block; margin-top: 4px;" th:text="${'🗓️ ' + latestDischargeReport.dischargeDate}">2026-07-30</strong>
+                </div>
+                <div th:if="${latestDischargeReport.dischargeSummary != null && !latestDischargeReport.dischargeSummary.isBlank()}">
+                    <span style="font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.5px; color: #047857; font-weight: 700; display: block;">Discharge Summary & Advice</span>
+                    <p style="margin: 4px 0 0; color: #065f46; font-size: 0.95rem; line-height: 1.5;" th:text="${latestDischargeReport.dischargeSummary}">Discharge summary notes</p>
+                </div>
+            </div>
+        </section>
+
         <section class="portal-card">
             <h2 style="font-size: 1.3rem; font-weight: 800; margin: 0 0 16px;">Available Medical Reports</h2>
             <div th:if="${!reports.isEmpty()}" style="display: grid; gap: 16px;">
-                <div th:each="report : ${reports}" style="border: 1px solid var(--line); border-radius: 12px; padding: 24px; background: white; display: flex; justify-content: space-between; align-items: center;">
+                <div th:each="report : ${reports}" style="border: 1px solid var(--line); border-radius: 12px; padding: 24px; background: white; display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap;">
                     <div>
                         <strong style="font-size: 1.15rem; color: var(--ink); display: block;" th:text="${report.title}">Report Title</strong>
                         <p style="margin: 6px 0 0; color: #64748b; font-size: 0.92rem;" th:text="${report.notes ?: 'No summary notes available.'}">Notes</p>
+                        <div th:if="${report.dischargeDate != null && !report.dischargeDate.isBlank()}" style="margin-top: 10px; display: flex; align-items: center; gap: 8px;">
+                            <span style="background: #f1f5f9; color: #334155; padding: 4px 10px; border-radius: 6px; font-size: 0.82rem; font-weight: 600;" th:text="${'🗓️ Discharge: ' + report.dischargeDate}">Discharge Date</span>
+                            <span th:if="${report.dischargeStatus != null}" style="background: #e0f2fe; color: #0369a1; padding: 4px 10px; border-radius: 6px; font-size: 0.82rem; font-weight: 600;" th:text="${report.dischargeStatus}">Status</span>
+                        </div>
                     </div>
                     <a class="btn-pill-primary" style="padding: 8px 20px; font-size: 0.88rem;" th:href="@{/reports/{id}/download(id=${report.id})}">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right: 4px;">

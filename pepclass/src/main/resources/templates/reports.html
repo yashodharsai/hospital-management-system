@@ -48,6 +48,7 @@
                 <tr>
                     <th>Report Title</th>
                     <th>Patient Name</th>
+                    <th>Discharge Date / Status</th>
                     <th>Attached File</th>
                     <th>Actions</th>
                 </tr>
@@ -56,6 +57,14 @@
                 <tr th:each="report : ${reports}">
                     <td style="font-weight: 700; color: var(--ink);" th:text="${report.title}">Title</td>
                     <td th:text="${report.patient.fullName}">Patient</td>
+                    <td>
+                        <div th:if="${report.dischargeDate != null && !report.dischargeDate.isBlank()}">
+                            <span style="font-weight: 700; color: #1e293b; font-size: 0.88rem; display: block;" th:text="${'🗓️ ' + report.dischargeDate}">Date</span>
+                            <span style="display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; background: #ecfdf5; color: #047857;"
+                                  th:text="${report.dischargeStatus ?: 'Scheduled'}">Status</span>
+                        </div>
+                        <span th:if="${report.dischargeDate == null || report.dischargeDate.isBlank()}" style="color: #94a3b8; font-size: 0.85rem;">Not specified</span>
+                    </td>
                     <td><span class="pill" th:text="${report.fileName}">report.txt</span></td>
                     <td>
                         <div style="display: flex; gap: 8px;">

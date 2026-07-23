@@ -47,6 +47,77 @@
         </section>
 
         <main class="main">
+            <!-- Medication Timing Notifications Alert for Patients -->
+            <section th:if="${notifications != null && !notifications.isEmpty()}" style="border: 2px solid #3b82f6; background: linear-gradient(135deg, #eff6ff 0%, #ffffff 100%); border-radius: 16px; padding: 24px; margin-bottom: 24px; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div style="width: 38px; height: 38px; border-radius: 10px; background: #2563eb; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">💊</div>
+                        <div>
+                            <h2 style="font-size: 1.2rem; font-weight: 800; color: #1e40af; margin: 0;">Medication Timing Notifications</h2>
+                            <span style="font-size: 0.85rem; color: #3b82f6; font-weight: 600;">Due medicine reminders prescribed by your physician</span>
+                        </div>
+                    </div>
+                    <span style="background: #2563eb; color: white; padding: 4px 12px; border-radius: 999px; font-weight: 700; font-size: 0.82rem;" th:text="${notifications.size() + ' Due Reminders'}">0 Due</span>
+                </div>
+
+                <div style="display: grid; gap: 12px;">
+                    <div th:each="n : ${notifications}" th:id="'dash-notif-' + ${n.id}" style="border: 1px solid #bfdbfe; border-radius: 12px; padding: 16px; background: white; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                        <div>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <strong style="font-size: 1.1rem; color: #1e3a8a;" th:text="${n.medicineName}">Medicine</strong>
+                                <span style="background: #dbeafe; color: #1e40af; font-size: 0.8rem; font-weight: 700; padding: 2px 8px; border-radius: 6px;" th:text="${n.dosage}">Dosage</span>
+                            </div>
+                            <p style="margin: 6px 0 0; font-size: 0.88rem; color: #475569;">
+                                ⏰ Time: <strong th:text="${n.timeSlot + ' (' + n.scheduledTime + ')'}">Time</strong> |
+                                🍽️ <span th:text="${n.foodTiming}">Food</span> |
+                                👨‍⚕️ Prescribed by <span th:text="${n.prescribedBy}">Doctor</span>
+                            </p>
+                        </div>
+                        <button type="button" th:onclick="'markAsTakenDash(\'' + ${n.id} + '\')'" class="button" style="background: #10b981; color: white; border: none; border-radius: 999px; padding: 8px 20px; font-size: 0.88rem; cursor: pointer; font-weight: 700; display: flex; align-items: center; gap: 6px;">
+                            <span>✓</span> Mark as Taken
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Discharge Date Alert Card for Patients -->
+            <section th:if="${latestDischargeReport != null}" style="border: 2px solid #059669; background: linear-gradient(135deg, #ecfdf5 0%, #ffffff 100%); border-radius: 16px; padding: 20px 24px; margin-bottom: 24px; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.08); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+                <div style="display: flex; align-items: center; gap: 14px;">
+                    <div style="width: 44px; height: 44px; border-radius: 12px; background: #10b981; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.4rem;">🏥</div>
+                    <div>
+                        <h2 style="font-size: 1.15rem; font-weight: 800; color: #065f46; margin: 0;" th:text="${'Discharge Date: ' + latestDischargeReport.dischargeDate}">Discharge Date</h2>
+                        <p style="margin: 4px 0 0; font-size: 0.88rem; color: #047857;" th:text="${'Status: ' + (latestDischargeReport.dischargeStatus ?: 'Scheduled')}">Status</p>
+                    </div>
+                </div>
+                <a th:href="@{/patient-reports}" class="button" style="background: #059669; color: white; border-radius: 999px; font-weight: 700; padding: 8px 20px; font-size: 0.88rem;">View Discharge Details</a>
+            </section>
+
+            <script th:if="${notifications != null && !notifications.isEmpty()}">
+                function markAsTakenDash(id) {
+                    const card = document.getElementById('dash-notif-' + id);
+                    fetch('/api/notifications/' + id + '/take', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            if (card) {
+                                card.style.transition = 'all 0.4s ease';
+                                card.style.opacity = '0';
+                                card.style.transform = 'translateY(-10px)';
+                                setTimeout(() => {
+                                    card.remove();
+                                }, 400);
+                            }
+                        }
+                    })
+                    .catch(err => console.error('Error:', err));
+                }
+            </script>
+
             <section class="stats-grid">
                 <div class="stat">
                     <span>Registered Patients</span>

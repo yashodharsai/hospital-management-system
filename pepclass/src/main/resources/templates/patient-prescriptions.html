@@ -38,6 +38,69 @@
 
     <main class="main">
         <div style="display: grid; gap: 32px;">
+            <!-- Real-Time Medication Notifications Box -->
+            <section th:if="${notifications != null && !notifications.isEmpty()}" style="border: 2px solid #3b82f6; background: linear-gradient(135deg, #eff6ff 0%, #ffffff 100%); border-radius: 16px; padding: 24px; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div style="width: 38px; height: 38px; border-radius: 10px; background: #2563eb; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">💊</div>
+                        <div>
+                            <h2 style="font-size: 1.2rem; font-weight: 800; color: #1e40af; margin: 0;">Medication Timing Notifications</h2>
+                            <span style="font-size: 0.85rem; color: #3b82f6; font-weight: 600;">Active intake reminders scheduled by your doctor</span>
+                        </div>
+                    </div>
+                    <span style="background: #2563eb; color: white; padding: 4px 12px; border-radius: 999px; font-weight: 700; font-size: 0.82rem;" th:text="${notifications.size() + ' Due Reminders'}">0 Due</span>
+                </div>
+
+                <div style="display: grid; gap: 12px;">
+                    <div th:each="n : ${notifications}" th:id="'notif-card-' + ${n.id}" style="border: 1px solid #bfdbfe; border-radius: 12px; padding: 16px; background: white; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                        <div>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <strong style="font-size: 1.1rem; color: #1e3a8a;" th:text="${n.medicineName}">Medicine</strong>
+                                <span style="background: #dbeafe; color: #1e40af; font-size: 0.8rem; font-weight: 700; padding: 2px 8px; border-radius: 6px;" th:text="${n.dosage}">Dosage</span>
+                            </div>
+                            <p style="margin: 6px 0 0; font-size: 0.88rem; color: #475569;">
+                                ⏰ Time: <strong th:text="${n.timeSlot + ' (' + n.scheduledTime + ')'}">Time</strong> |
+                                🍽️ <span th:text="${n.foodTiming}">Food</span> |
+                                👨‍⚕️ Prescribed by <span th:text="${n.prescribedBy}">Doctor</span>
+                            </p>
+                        </div>
+                        <button type="button" th:onclick="'markAsTaken(\'' + ${n.id} + '\')'" class="button" style="background: #10b981; color: white; border: none; border-radius: 999px; padding: 8px 20px; font-size: 0.88rem; cursor: pointer; font-weight: 700; display: flex; align-items: center; gap: 6px;">
+                            <span>✓</span> Mark as Taken
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <script>
+                function markAsTaken(id) {
+                    const card = document.getElementById('notif-card-' + id);
+                    fetch('/api/notifications/' + id + '/take', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            if (card) {
+                                card.style.transition = 'all 0.4s ease';
+                                card.style.opacity = '0';
+                                card.style.transform = 'translateY(-10px)';
+                                setTimeout(() => {
+                                    card.remove();
+                                }, 400);
+                            }
+                        } else {
+                            alert(data.message || 'Could not update notification.');
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Error marking as taken:', err);
+                    });
+                }
+            </script>
+
             <section class="portal-card">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                     <h2 style="font-size: 1.3rem; font-weight: 800; margin: 0;">Active Doctor Prescriptions</h2>
@@ -52,7 +115,7 @@
                             </div>
                             <div style="display: flex; align-items: center; gap: 10px;">
                                 <span class="pill" th:text="${prescription.dosage}">Dosage</span>
-                                <a th:href="@{/prescriptions/{id}/print(id=${prescription.id})}" class="btn-pill-primary" style="padding: 6px 14px; font-size: 0.85rem;" target="_blank">
+                                <a th:href="@{/prescriptions/{id}/print(id=${prescription.id}, download=true)}" class="btn-pill-primary" style="padding: 6px 14px; font-size: 0.85rem;" target="_blank">
                                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right: 4px;">
                                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
                                     </svg>

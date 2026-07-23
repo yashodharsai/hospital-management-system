@@ -71,9 +71,10 @@
                         <span class="muted-inline" th:if="${#lists.isEmpty(medicines)}">None</span>
                     </td>
                     <td>
-                        <div style="display: flex; gap: 8px;">
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
                             <a class="button secondary" style="min-height: 34px; padding: 0 12px; font-size: 0.82rem;" th:href="@{/patients/{id}/edit(id=${patient.id})}">Edit</a>
                             <a class="button" style="min-height: 34px; padding: 0 12px; font-size: 0.82rem;" th:href="@{/medicines/new(patientId=${patient.id})}">+ Med</a>
+                            <a class="button" style="min-height: 34px; padding: 0 12px; font-size: 0.82rem; background: #2563eb; color: white;" th:href="@{/prescriptions/new(patientId=${patient.id})}">+ Issue Rx</a>
                         </div>
                     </td>
                 </tr>

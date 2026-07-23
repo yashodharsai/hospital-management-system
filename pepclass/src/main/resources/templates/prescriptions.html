@@ -66,8 +66,9 @@
                     </td>
                     <td th:text="${prescription.prescribedBy}">Doctor</td>
                     <td>
-                        <div style="display: flex; gap: 8px; align-items: center;">
-                            <a class="button secondary" style="min-height: 32px; padding: 0 12px; font-size: 0.82rem;" th:href="@{/prescriptions/{id}/print(id=${prescription.id})}" target="_blank">Print / PDF</a>
+                        <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                            <a class="button" style="min-height: 32px; padding: 0 12px; font-size: 0.82rem; background: #059669; color: white; border: none;" th:href="@{/prescriptions/{id}/print(id=${prescription.id}, download=true)}" target="_blank">📥 Download PDF</a>
+                            <a class="button secondary" style="min-height: 32px; padding: 0 12px; font-size: 0.82rem;" th:href="@{/prescriptions/{id}/print(id=${prescription.id})}" target="_blank">View / Print</a>
                             <a class="button danger" style="min-height: 32px; padding: 0 12px; font-size: 0.82rem;" th:href="@{/prescriptions/{id}/delete(id=${prescription.id})}">Delete</a>
                         </div>
                     </td>

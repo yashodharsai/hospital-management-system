@@ -65,6 +65,30 @@
                     <textarea id="notes" th:field="*{notes}" placeholder="Brief diagnostic summary or findings..."></textarea>
                 </div>
 
+                <div style="border-top: 1px dashed var(--line); margin: 16px 0; padding-top: 16px;">
+                    <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--ink); margin-bottom: 12px;">🏥 Patient Discharge Information</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div class="field">
+                            <label for="dischargeDate">Target / Actual Discharge Date</label>
+                            <input id="dischargeDate" type="date" th:field="*{dischargeDate}">
+                        </div>
+                        <div class="field">
+                            <label for="dischargeStatus">Discharge Status</label>
+                            <select id="dischargeStatus" th:field="*{dischargeStatus}">
+                                <option value="">Select Discharge Status</option>
+                                <option value="Under Observation">Under Observation</option>
+                                <option value="Scheduled for Discharge">Scheduled for Discharge</option>
+                                <option value="Ready for Discharge">Ready for Discharge</option>
+                                <option value="Discharged">Discharged</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="field" style="margin-top: 12px;">
+                        <label for="dischargeSummary">Discharge Summary & Medical Advice</label>
+                        <textarea id="dischargeSummary" th:field="*{dischargeSummary}" placeholder="Post-discharge care instructions, home care guidelines, or discharge condition summary..."></textarea>
+                    </div>
+                </div>
+
                 <div class="field">
                     <label for="reportContent">Full Medical Report Content</label>
                     <textarea id="reportContent" th:field="*{reportContent}" placeholder="Detailed report text contents..."></textarea>
